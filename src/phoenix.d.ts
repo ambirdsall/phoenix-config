@@ -1,31 +1,31 @@
 interface Window {
-	/**
-	 * Clear unmaximized position.
-	 */
-	clearUnmaximized(): void;
-	toggleMaximized(): void;
+  /**
+   * Clear unmaximized position.
+   */
+  clearUnmaximized(): void;
+  toggleMaximized(): void;
 }
 
 interface ScreenObject {
-	/**
-	 * Returns the screen at the provided point.
-	 */
-	at(point: Point): Screen;
+  /**
+   * Returns the screen at the provided point.
+   */
+  at(point: Point): Screen;
 }
 
 interface Modal {
-	/**
-	 * Show modal in title position on screen.
-	 */
-	showTitleOn(screen: Screen): void;
-	/**
-	 * Show modal in center position on screen.
-	 */
-	showCenterOn(screen: Screen): void;
+  /**
+   * Show modal in title position on screen.
+   */
+  showTitleOn(screen: Screen): void;
+  /**
+   * Show modal in center position on screen.
+   */
+  showCenterOn(screen: Screen): void;
 }
 
 interface IntervalFunction {
-	(callback: Function, interval: number): number;
+  (callback: Function, interval: number): number;
 }
 declare var setTimeout: IntervalFunction;
 declare var setInterval: IntervalFunction;

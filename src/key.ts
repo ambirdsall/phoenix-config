@@ -11,75 +11,75 @@ onKey('f19', [], enableHyperBindings);
 onKey('f19', ['shift'], enableHyperBindings);
 
 function enableHyperBindings() {
-	if (!hyperTimeout) {
-		log('enable f19');
-		enableHyperKeys();
-		hyperTimeout = setTimeout(disableHyperBindings, 510);
-	} else {
-		clearTimeout(hyperTimeout);
-		hyperTimeout = setTimeout(disableHyperBindings, 110);
-	}
+  if (!hyperTimeout) {
+    log('enable f19');
+    enableHyperKeys();
+    hyperTimeout = setTimeout(disableHyperBindings, 510);
+  } else {
+    clearTimeout(hyperTimeout);
+    hyperTimeout = setTimeout(disableHyperBindings, 110);
+  }
 }
 
 function disableHyperBindings() {
-	log('disable f19');
-	if (hyperTimeout) {
-		clearTimeout(hyperTimeout);
-		hyperTimeout = null;
-	}
-	disableHyperKeys();
+  log('disable f19');
+  if (hyperTimeout) {
+    clearTimeout(hyperTimeout);
+    hyperTimeout = null;
+  }
+  disableHyperKeys();
 }
 
 function onKey(key: Phoenix.KeyIdentifier, mod: Phoenix.ModifierKey[], cb: Phoenix.KeyCallback) {
-	let isHyper = false;
-	if (mod === hyper) {
-		mod = [];
-		isHyper = true;
-	} else if (mod === hyperShift) {
-		mod = ['shift'];
-		isHyper = true;
-	}
+  let isHyper = false;
+  if (mod === hyper) {
+    mod = [];
+    isHyper = true;
+  } else if (mod === hyperShift) {
+    mod = ['shift'];
+    isHyper = true;
+  }
 
-	const handler = new Key(key, mod, cb);
-	if (!handler) {
-		return;
-	}
+  const handler = new Key(key, mod, cb);
+  if (!handler) {
+    return;
+  }
 
-	const id = createID(key, mod);
-	handlers.set(id, handler);
+  const id = createID(key, mod);
+  handlers.set(id, handler);
 
-	if (isHyper) {
-		handler.disable(); // Add hyper handlers as disabled.
-		hyperHandlers.set(id, handler);
-	}
+  if (isHyper) {
+    handler.disable(); // Add hyper handlers as disabled.
+    hyperHandlers.set(id, handler);
+  }
 
-	return () => unbind(id);
+  return () => unbind(id);
 }
 
 function unbind(id: string) {
-	const handler = handlers.get(id);
-	if (handler) {
-		handler.disable();
-		handlers.delete(id);
-		hyperHandlers.delete(id);
-	}
+  const handler = handlers.get(id);
+  if (handler) {
+    handler.disable();
+    handlers.delete(id);
+    hyperHandlers.delete(id);
+  }
 }
 
 function createID(key: string, mod: string[]) {
-	return key + mod.sort().join();
+  return key + mod.sort().join();
 }
 
 function getHandler(key: string, mod: string[]) {
-	const id = createID(key, mod);
-	return handlers.get(id);
+  const id = createID(key, mod);
+  return handlers.get(id);
 }
 
 function enableHyperKeys() {
-	hyperHandlers.forEach(h => h.enable());
+  hyperHandlers.forEach(h => h.enable());
 }
 
 function disableHyperKeys() {
-	hyperHandlers.forEach(h => h.disable());
+  hyperHandlers.forEach(h => h.disable());
 }
 
 export { onKey, getHandler, enableHyperKeys, disableHyperKeys };

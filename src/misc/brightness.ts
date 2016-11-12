@@ -13,40 +13,40 @@ let bModalHideHandler: number;
 const debouncedApplyBrightness = debounce(applyBrightness, 500);
 
 function applyBrightness() {
-	Task.run(brightnessCmd, ['set', String(brightnessValue)], (t) => {
-		log(t.output, t.error, t.status);
-	});
+  Task.run(brightnessCmd, ['set', String(brightnessValue)], (t) => {
+    log(t.output, t.error, t.status);
+  });
 }
 
 function addBrightness(value: number) {
-	if (brightnessValue === undefined) {
-		brightnessValue = 40;
-	}
+  if (brightnessValue === undefined) {
+    brightnessValue = 40;
+  }
 
-	if (value < 0) {
-		brightnessValue = Math.max(brightnessValue + value, 0);
-	} else {
-		brightnessValue = Math.min(brightnessValue + value, 100);
-	}
+  if (value < 0) {
+    brightnessValue = Math.max(brightnessValue + value, 0);
+  } else {
+    brightnessValue = Math.min(brightnessValue + value, 100);
+  }
 
-	Storage.set('brightness', brightnessValue);
+  Storage.set('brightness', brightnessValue);
 
-	showBrightness(brightnessValue);
-	debouncedApplyBrightness();
+  showBrightness(brightnessValue);
+  debouncedApplyBrightness();
 }
 
 function showBrightness(value: number) {
-	clearTimeout(bModalHideHandler);
-	if (!bModal) bModal = new Modal();
+  clearTimeout(bModalHideHandler);
+  if (!bModal) bModal = new Modal();
 
-	bModal.text = `Brightness: ${value}`;
-	bModal.showCenterOn(Screen.main());
+  bModal.text = `Brightness: ${value}`;
+  bModal.showCenterOn(Screen.main());
 
-	bModalHideHandler = setTimeout(closeBrightnessModal, 1000);
+  bModalHideHandler = setTimeout(closeBrightnessModal, 1000);
 }
 
 function closeBrightnessModal() {
-	bModal.close();
-	bModal = null;
-	bModalHideHandler = null;
+  bModal.close();
+  bModal = null;
+  bModalHideHandler = null;
 }

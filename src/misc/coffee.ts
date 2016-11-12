@@ -12,55 +12,55 @@ go get it!
 `;
 
 interface Config {
-	screen: Screen;
-	timeout: number;
+  screen: Screen;
+  timeout: number;
 }
 
 interface CoffeTimer extends Config {
-	modal: Modal;
+  modal: Modal;
 }
 
 export interface TimerStopper {
-	stop(): void;
+  stop(): void;
 }
 
 function start({ screen, timeout }: Config): TimerStopper {
-	let timer = {
-		screen, timeout,
-		modal: new Modal(),
-	};
-	let update = updater(timer);
+  let timer = {
+    screen, timeout,
+    modal: new Modal(),
+  };
+  let update = updater(timer);
 
-	let updateInterval = setInterval(update, 1000 * 60);
-	let alertTimeout = setTimeout(alerter(timer, updateInterval), 1000 * 60 * timer.timeout);
-	update();
+  let updateInterval = setInterval(update, 1000 * 60);
+  let alertTimeout = setTimeout(alerter(timer, updateInterval), 1000 * 60 * timer.timeout);
+  update();
 
-	return {
-		stop() {
-			clearTimeout(updateInterval);
-			clearTimeout(alertTimeout);
-			timer.modal.close();
-			timer.modal = null;
-		},
-	};
+  return {
+    stop() {
+      clearTimeout(updateInterval);
+      clearTimeout(alertTimeout);
+      timer.modal.close();
+      timer.modal = null;
+    },
+  };
 }
 
 function updater(timer: CoffeTimer) {
-	return () => {
-		timer.timeout--;
-		let min = timer.timeout ? '~' + String(timer.timeout) : '<1';
-		timer.modal.text = `Coffee in ${min} min`;
-		timer.modal.origin = applyMargin(originOnScreen(timer.modal, timer.screen, Orientation.SouthEast), MODAL_MARGIN, MODAL_MARGIN);
-		timer.modal.show();
-	};
+  return () => {
+    timer.timeout--;
+    let min = timer.timeout ? '~' + String(timer.timeout) : '<1';
+    timer.modal.text = `Coffee in ${min} min`;
+    timer.modal.origin = applyMargin(originOnScreen(timer.modal, timer.screen, Orientation.SouthEast), MODAL_MARGIN, MODAL_MARGIN);
+    timer.modal.show();
+  };
 }
 
 function alerter(timer: CoffeTimer, updateInterval: number) {
-	return () => {
-		clearTimeout(updateInterval);
-		timer.modal.close();
-		timer.modal = new Modal();
-		timer.modal.text = DONE_MSG.trim();
-		timer.modal.showCenterOn(timer.screen);
-	};
+  return () => {
+    clearTimeout(updateInterval);
+    timer.modal.close();
+    timer.modal = new Modal();
+    timer.modal.text = DONE_MSG.trim();
+    timer.modal.showCenterOn(timer.screen);
+  };
 }
